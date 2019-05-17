@@ -1,4 +1,4 @@
 .idea
 .node_modules
-.error.txt
-.result.json
+error.txt
+result.json
