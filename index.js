@@ -20,11 +20,11 @@ db.connect("mongodb://127.0.0.1:27017/datagrin").then(async msg => {
         lr.pause();
         countLine ++;
         console.log("Đang chạy line: ", countLine);
-        // if (countLine > 0) {
-        //     await fs.writeFile("abc.txt","Line: " + countLine, err => {
-        //         if (err) throw err;
-        //     });
-        // }
+        if (countLine > 0) {
+            await fs.writeFile("abc.txt","Line: " + countLine, err => {
+                if (err) throw err;
+            });
+        }
         let uid = line.split("\t")[1];
         listUID.push(uid);
         if (listUID.length === MAX_UID_LENGTH) {
