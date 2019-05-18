@@ -1,4 +1,4 @@
-const TOKEN_PATH = '../Data/access_token';
+const TOKEN_PATH = 'Data/access_token';
 
 const handlImportToken = require('../services/handle_import_token');
 var db = require('../database/database');
