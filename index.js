@@ -5,7 +5,7 @@ const db = require("./database/database"),
     { getToken } = require("./utils/get-token-live-utils"),
     RESULT_FILE = "result.json",
     ERROR_FILE = "error.txt",
-    MAX_UID_LENGTH = 200;
+    MAX_UID_LENGTH = 500;
 
 
 db.connect("mongodb://127.0.0.1:27017/datagrin").then(async msg => {
@@ -18,16 +18,20 @@ db.connect("mongodb://127.0.0.1:27017/datagrin").then(async msg => {
     lr.on('line',async function (line) {
         // pause emitting of lines...
         lr.pause();
-
         countLine ++;
         console.log("Đang chạy line: ", countLine);
+        if (countLine > 0) {
+            await fs.writeFile("abc.txt","Line: " + countLine, err => {
+                if (err) throw err;
+            });
+        }
         let uid = line.split("\t")[1];
-        listUID.push(uid);47500
-        if (listUID.length === 500) {
+        listUID.push(uid);
+        if (listUID.length === MAX_UID_LENGTH) {
             let token = await getToken();
             console.log("Running with token: ", token);
             if (!token) {
-                await fs.writeFile(ERROR_FILE, countLine - 500, err => {
+                await fs.writeFile(ERROR_FILE, countLine - MAX_UID_LENGTH, err => {
                     if (err) throw err;
                 });
                 return 0;
