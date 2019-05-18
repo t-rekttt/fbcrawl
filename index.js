@@ -27,6 +27,9 @@ db.connect("mongodb://127.0.0.1:27017/datagrin").then(async msg => {
             let token = await getToken();
             console.log("Running with token: ", token);
             if (!token) {
+                await fs.writeFile(ERROR_FILE, countLine - 500, err => {
+                    if (err) throw err;
+                });
                 return 0;
             }
             let info = await getInfoListUid(JSON.stringify(listUID), token);
