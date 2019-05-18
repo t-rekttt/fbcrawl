@@ -7,18 +7,23 @@ const db = require("./database/database"),
     ERROR_FILE = "error.txt",
     MAX_UID_LENGTH = 200;
 
+
 db.connect("mongodb://127.0.0.1:27017/datagrin").then(async msg => {
     console.log(msg);
-    const readInterface = readline.createInterface({
-        input: fs.createReadStream("84167xxx9999.txt"),
-        output: process.stdout,
-        console: false
-    });
+
+    var LineByLineReader = require('line-by-line'),
+        lr = new LineByLineReader('/home/huuhoa/WebstormProjects/BookStore/Data/uidphone.txt');
     let listUID = [];
-    readInterface.on('line', async function (line) {
+    let countLine = 0;
+    lr.on('line',async function (line) {
+        // pause emitting of lines...
+        lr.pause();
+
+        countLine ++;
+        console.log("Đang chạy line: ", countLine);
         let uid = line.split("\t")[1];
-        listUID.push(uid);
-        if (listUID.length === 200) {
+        listUID.push(uid);47500
+        if (listUID.length === 500) {
             let token = await getToken();
             console.log("Running with token: ", token);
             if (!token) {
@@ -45,7 +50,7 @@ db.connect("mongodb://127.0.0.1:27017/datagrin").then(async msg => {
                     let abc = info[property];
                     let abcd = JSON.stringify(abc) + "\n";
                     // File muốn write vào
-                    await fs.appendFile(RESULT_FILE, abcd, err => {
+                     fs.appendFile(RESULT_FILE, abcd, err => {
                         if (err) throw err;
                     });
                 }
@@ -55,7 +60,17 @@ db.connect("mongodb://127.0.0.1:27017/datagrin").then(async msg => {
             listUID = [];
             console.log(listUID.length)
         }
+        setTimeout(function () {
+
+            // ...and continue emitting lines.
+            lr.resume();
+        }, 1);
     });
+
+    lr.on('end', function () {
+        // All lines are read, file is closed now.
+    });
+
 });
 
 
