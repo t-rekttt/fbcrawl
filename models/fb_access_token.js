@@ -37,32 +37,32 @@ const FbAccessTokenSchema = new Schema({
 
 FbAccessTokenSchema.statics.findRandToken = function() {
   return this.find({ status: "active" })
-    .then(tokens => {
-      if (tokens.length > 0) {
-        const rand = Math.floor(Math.random() * tokens.length) + 1;
-        return Promise.resolve({ ...tokens[rand - 1].toJSON() });
-      } else {
+      .then(tokens => {
+        if (tokens.length > 0) {
+          const rand = Math.floor(Math.random() * tokens.length) + 1;
+          return Promise.resolve({ ...tokens[rand - 1].toJSON() });
+        } else {
+          return Promise.resolve();
+        }
+      })
+      .catch(err => {
+        console.log(err);
         return Promise.resolve();
-      }
-    })
-    .catch(err => {
-      console.log(err);
-      return Promise.resolve();
-    });
+      });
 };
 
 FbAccessTokenSchema.statics.updateFbAccessToken = function(_id, diff) {
   return this.findOneAndUpdate(
-    {
-      _id: mongoose.Types.ObjectId(_id)
-    },
-    {
-      $set: diff
-    },
-    {
-      returnNewDocument: true,
-      new: true
-    }
+      {
+        _id: mongoose.Types.ObjectId(_id)
+      },
+      {
+        $set: diff
+      },
+      {
+        returnNewDocument: true,
+        new: true
+      }
   );
 };
 
