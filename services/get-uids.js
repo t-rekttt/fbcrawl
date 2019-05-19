@@ -2,7 +2,7 @@ const apiSender = require("./api-sender");
 
 const getInfoListUid = (uidlist, access_token, result, next, count) => {
   let route = `https://graph.facebook.com/?ids=${uidlist}&access_token=${access_token}`;
-    console.log(route);
+    //console.log(route);
   return apiSender
     .getFb(route)
     .then(resFb => {

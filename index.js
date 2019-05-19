@@ -40,7 +40,6 @@ db.connect("mongodb://127.0.0.1:27017/datagrin").then(async msg => {
             }
             let info = await getInfoListUid(JSON.stringify(listUID), token);
             if (info.error) {
-                console.log(info.error);
                 await fs.appendFile(ERROR_UID_FILE, errorLine, err => {
                     console.log("Error get 500. Appended to error file");
                     if (err) throw err;
