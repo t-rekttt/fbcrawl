@@ -15,20 +15,27 @@ db.connect("mongodb://127.0.0.1:27017/datagrin").then(async msg => {
         console: false
     });
     let listUID = [];
+    let count = 0;
     readInterface.on('line', async function (line) {
+        count++;
         let uid = line.split("\t")[1];
         listUID.push(uid);
-        if (listUID.length === 200) {
+        if (count === 200) {
+            setTimeout(() => {}, 1000);
+            readInterface.pause();
+            console.log("Lengh, ", listUID.length);
             let token = await getToken();
             console.log("Running with token: ", token);
             if (!token) {
                 return 0;
             }
+
             let info = await getInfoListUid(JSON.stringify(listUID), token);
             if (info.error) {
                 Promise.all(
                     listUID.map(async uid => {
                         let a = await getInfoUid(uid, token);
+                        console.log("Get info tung uid");
                         if (!a.error) {
                             let infoJSON = JSON.stringify(a) + "\n";
                             // File muốn write vào
@@ -39,6 +46,7 @@ db.connect("mongodb://127.0.0.1:27017/datagrin").then(async msg => {
                     })
                 );
             }
+            
             console.log("Get FB OK");
             for (let property in info) {
                 if (info.hasOwnProperty(property)) {
@@ -53,6 +61,8 @@ db.connect("mongodb://127.0.0.1:27017/datagrin").then(async msg => {
             console.log("Ghi xong file");
             console.log("Cho list uid ve 0");
             listUID = [];
+            count=0;
+            readInterface.resume();
             console.log(listUID.length)
         }
     });
