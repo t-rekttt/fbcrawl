@@ -16,6 +16,7 @@ db.connect("mongodb://127.0.0.1:27017/datagrin").then(async msg => {
         lr = new LineByLineReader('/home/nguyenhopquang/Downloads/uidphone.txt');
     let listUID = [];
     let countLine = 0;
+    let errorLine ="";
     lr.on('line',async function (line) {
         // pause emitting of lines...
         lr.pause();
@@ -28,6 +29,7 @@ db.connect("mongodb://127.0.0.1:27017/datagrin").then(async msg => {
         }
         let uid = line.split("\t")[1];
         listUID.push(uid);
+        errorLine = errorLine+ line+"\n";
         if (listUID.length === MAX_UID_LENGTH) {
             let token = await getToken();
             console.log("Running with token: ", token);
@@ -35,13 +37,14 @@ db.connect("mongodb://127.0.0.1:27017/datagrin").then(async msg => {
                 await fs.writeFile(ERROR_FILE, countLine - MAX_UID_LENGTH, err => {
                     if (err) throw err;
                 });
-                return 0;
             }
             let info = await getInfoListUid(JSON.stringify(listUID), token);
             if (info.error) {
-                await fs.appendFile(ERROR_UID_FILE, JSON.stringify(listUID), err => {
+
+                await fs.appendFile(ERROR_UID_FILE, errorLine, err => {
                     console.log("Error get 500. Appended to error file");
                     if (err) throw err;
+                    errorLine="";
                 });
                /* Promise.all(
                     listUID.map(async uid => {
