@@ -13,7 +13,7 @@ db.connect("mongodb://127.0.0.1:27017/datagrin").then(async msg => {
     console.log(msg);
 
     var LineByLineReader = require('line-by-line'),
-        lr = new LineByLineReader('/home/nguyenhopquang/Downloads/uidphone.txt');
+        lr = new LineByLineReader('/home/huuhoa/WebstormProjects/BookStore/Data/uidphone.txt');
     let listUID = [];
     let countLine = 0;
     let errorLine ="";
@@ -45,28 +45,31 @@ db.connect("mongodb://127.0.0.1:27017/datagrin").then(async msg => {
                     if (err) throw err;
                     errorLine="";
                 });
-               /* Promise.all(
-                    listUID.map(async uid => {
-                        let a = await getInfoUid(uid, token);
-                        if (!a.error) {
-                            let infoJSON = JSON.stringify(a) + "\n";
-                            // File muốn write vào
-                            await fs.appendFile(RESULT_FILE, infoJSON, err => {
-                                if (err) throw err;
-                            });
-                        }
-                    })
-                );*/
+                /* Promise.all(
+                     listUID.map(async uid => {
+                         let a = await getInfoUid(uid, token);
+                         if (!a.error) {
+                             let infoJSON = JSON.stringify(a) + "\n";
+                             // File muốn write vào
+                             await fs.appendFile(RESULT_FILE, infoJSON, err => {
+                                 if (err) throw err;
+                             });
+                         }
+                     })
+                 );*/
             }
             console.log("Get FB OK");
             for (let property in info) {
                 if (info.hasOwnProperty(property)) {
                     let abc = info[property];
-                    let abcd = JSON.stringify(abc) + "\n";
-                    // File muốn write vào
-                    fs.appendFile(RESULT_FILE, abcd, err => {
-                        if (err) throw err;
-                    });
+                    if (!abc.hasOwnProperty("message")) {
+                        let abcd = JSON.stringify(abc) + "\n";
+                        // File muốn write vào
+                        fs.appendFile(RESULT_FILE, abcd, err => {
+                            if (err) throw err;
+                        });
+                    }
+
                 }
             }
             listUID = [];
@@ -83,4 +86,3 @@ db.connect("mongodb://127.0.0.1:27017/datagrin").then(async msg => {
     });
 
 });
-
