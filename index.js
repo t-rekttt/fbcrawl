@@ -6,7 +6,7 @@ const db = require("./database/database"),
     RESULT_FILE = "result.json",
     ERROR_FILE = "error.txt",
     ERROR_UID_FILE ="error-uid.txt",
-    MAX_UID_LENGTH = 500;
+    MAX_UID_LENGTH = 200;
 
 
 db.connect("mongodb://127.0.0.1:27017/datagrin").then(async msg => {
@@ -21,7 +21,7 @@ db.connect("mongodb://127.0.0.1:27017/datagrin").then(async msg => {
         // pause emitting of lines...
         lr.pause();
         countLine ++;
-        console.log("Đang chạy line: ", countLine);
+        //console.log("Đang chạy line: ", countLine);
         if (countLine > 0) {
             await fs.writeFile("abc.txt","Line: " + countLine, err => {
                 if (err) throw err;
@@ -40,7 +40,7 @@ db.connect("mongodb://127.0.0.1:27017/datagrin").then(async msg => {
             }
             let info = await getInfoListUid(JSON.stringify(listUID), token);
             if (info.error) {
-
+                console.log(info.error);
                 await fs.appendFile(ERROR_UID_FILE, errorLine, err => {
                     console.log("Error get 500. Appended to error file");
                     if (err) throw err;
@@ -70,10 +70,7 @@ db.connect("mongodb://127.0.0.1:27017/datagrin").then(async msg => {
                     });
                 }
             }
-            console.log("Ghi xong file");
-            console.log("Cho list uid ve 0");
             listUID = [];
-            console.log(listUID.length)
         }
         setTimeout(function () {
 
