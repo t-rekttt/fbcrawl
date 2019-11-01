@@ -12,7 +12,7 @@
   "dependencies": {
     "glob": "^7.1.4",
     "line-by-line": "^0.1.6",
-    "mongoose": "^5.5.9",
+    "mongoose": "^5.7.5",
     "request": "^2.88.0",
     "request-promise": "^4.2.4",
     "save": "^2.3.3"
